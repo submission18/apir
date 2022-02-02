@@ -1,5 +1,5 @@
 # Authenticated PIR
-**WARNING**: This software is **not** production-ready and is full of security
+**WARNING**: This software is **not** production-ready and contains security
 vulnerabilities.
 
 This repository contains the code for multi-server and
@@ -14,7 +14,7 @@ to private compute several statistics over the set of PGP keys.
 
 ## WARNING
 The original Go client and this [website](https://keyd.org/) are **not** production-ready software
-and they are full of security vulnerabilities.
+and they contain security vulnerabilities.
 In particular, the queries issued from this website are sent to the servers in plaintext.
 The queries sent from the original Go client use hard-coded secret keys
 available on Github and
