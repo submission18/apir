@@ -1,0 +1,309 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: Inter, sans-serif;
+}
+
+/* HEADER */
+
+div.header {
+  text-align: center;
+}
+
+div.header h1 {
+  font-family: "Arial black", sans-serif;
+  font-size: 4em;
+  line-height: 1em;
+  padding: 20px 0;
+}
+
+div.header p.subtitle {
+  line-height: 1em;
+  font-family: "silom", sans-serif;
+  padding: 0 0 60px 0;
+}
+
+div.header p.subtitle span {
+  text-transform: uppercase;
+  color: #b90000;
+}
+
+/* MAIN */
+
+div.main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 1024px;
+}
+
+div.main > * {
+  flex: 1;
+  margin: 3px;
+}
+
+/* RETRIEVE */
+
+div.main div.retrieve {
+  background: whitesmoke;
+}
+
+div.main div.retrieve h2 {
+  padding: 5px;
+  background-color: #000;
+  color: #fff;
+  font-weight: normal;
+  font-family: silom, sans-serif;
+  font-size: 1em;
+}
+
+div.main div.retrieve div.content-wrap {
+  padding: 20px;
+}
+
+div.main div.retrieve div.content-wrap p.hint {
+  padding: 5px 0;
+  font-size: .8em;
+}
+
+div.main div.retrieve form {
+  padding: 20px 0 50px 0;
+}
+
+div.main div.retrieve div#result {
+  padding: 30px;
+  font-family: monospace;
+}
+
+/* COUNT EMAILS */
+
+div.main div.count-emails {
+  background: whitesmoke;
+}
+
+div.main div.count-emails h2 {
+  padding: 5px;
+  background-color: #000;
+  color: #fff;
+  font-weight: normal;
+  font-family: silom, sans-serif;
+  font-size: 1em;
+}
+
+div.main div.count-emails div.content-wrap {
+  padding: 20px;
+}
+
+div.main div.count-emails div.content-wrap p.hint {
+  padding: 5px 0;
+  font-size: .8em;
+}
+
+div.main div.count-emails div.content-wrap > div.row {
+  padding: 7px;
+}
+
+div.main div.count-emails div.content-wrap input.openable[type="radio"] {
+}
+
+div.main div.count-emails div.content-wrap input.openable[type="radio"] ~ label {
+  text-transform: uppercase;
+}
+
+div.main div.count-emails div.content-wrap input.openable[type="radio"] ~ label ~ form.sub-form {
+  display: none;
+  padding: 10px;
+  margin: 10px;
+  background: #fff;
+}
+
+div.main div.count-emails div.content-wrap input.openable[type="radio"]:checked ~ label {
+  font-weight: bold;
+}
+
+div.main div.count-emails div.content-wrap input.openable[type="radio"]:checked ~ label ~ form.sub-form {
+  display: block;
+}
+
+div.main div.count-emails div.content-wrap form input {
+
+}
+
+div.main div.count-emails div.content-wrap form input:focus {
+}
+
+div.main div.count-emails div.content-wrap button:hover {
+  background-color: #d6d6d6;
+}
+
+div.main div.count-emails div.content-wrap div.result > div {
+  padding: 30px;
+  font-family: monospace;
+  background-color: rgb(236, 236, 236);
+}
+
+/* FONT */
+
+@font-face {
+  font-family: silom;
+  src: url(Silom.ttf);
+}
+
+@font-face {
+  font-family: inter;
+  src: url(Inter.ttf);
+}
+
+/* BUTTON */
+
+button.std-btn {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid black;
+  border-radius: 20px;
+  font-size: 1em;
+  padding: 5px 14px;
+  cursor: pointer;
+  display: block;
+  margin: 10px 0;
+}
+
+div.std-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+button.std-btn:hover {
+  background-color: #d6d6d6;
+}
+
+/* FORM */
+
+div.row-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 3px 0;
+}
+
+div.row-form label {
+  font-size: .8em;
+  color: #777;
+  padding: 0 10px 0 0;
+  width: 60px;
+  text-align: right;
+}
+
+div.row-form input {
+  border-width: 1px;
+  border-style: solid;
+  padding: 12px 10px;
+  display: block;
+  width: 100%;
+}
+
+div.row-form input:focus {
+  outline: none;
+}
+
+input[type="radio"] {
+  margin: 10px 0;
+}
+
+/* SPINNER */
+
+div.loader {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  animation: bgfade 1s linear infinite alternate;
+}
+
+.spinner {
+  animation: rotate 2s linear infinite;
+  width: 20px;
+  height: 20px;
+  margin: 0 10px 0 0;
+}
+
+.spinner .path {
+  stroke: black;
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+@keyframes bgfade {
+  0% {
+    background-color: white;
+  }
+  100% {
+    background-color: rgb(236, 236, 236);
+  }
+}
+
+/* RESPONSIVENESS */
+
+@media (max-width: 800px) {
+  div.main {
+    flex-direction: column;
+  }
+}
+
+/* PRESENTATION */
+
+div.presentation {
+  width: 100%;
+  max-width: 1024px;
+  margin: auto;
+  font-family: 'inter', sans-serif;
+  padding: 0 0 30px 0;
+}
+
+div.presentation h1 {
+  color: #444;
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: .5rem;
+}
+
+div.presentation p, div.presentation summary {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 30px;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #1b1b1b;
+}

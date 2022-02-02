@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/submission18/apir/lib/proto;proto";
+
+service VPIR {
+        rpc DatabaseInfo (DatabaseInfoRequest) returns (DatabaseInfoResponse) {}
+	rpc Query (QueryRequest) returns (QueryResponse) {}
+}
+
+message QueryRequest {
+	bytes query = 1;
+}
+
+message QueryResponse {
+	bytes answer = 1;
+}
+
+message DatabaseInfoRequest {}
+
+message DatabaseInfoResponse {
+        uint32 numRows = 1;
+        uint32 numColumns = 2;
+        uint32 blockLength = 3;
+        string pirType = 4;
+        bytes root = 5;
+        uint32 proofLen = 6;
+}

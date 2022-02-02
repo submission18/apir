@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet"> 
+
+    <title>VPIR demo</title>
+  </head>
+  <body>
+    <div class="header">
+        <h1>APIR</h1>
+        <p class="subtitle">
+            <span>authenticated</span>
+            Private-information-retrieval
+        </p>
+    </div>
+
+    <div class="presentation">
+        <h1>WARNING</h1>
+
+        <p>
+        The original Go client and this website are <strong>not</strong> production-ready software
+        and they are full of security vulnerabilities. 
+        In particular, the queries issued from this website are sent to the servers in plaintext. 
+        The queries sent from the original Go client use hard-coded secret keys
+        available on Github and
+        should <strong>not</strong> be considered as private.
+        The original Go client and this website are only a proof-of-concept for the sake
+        of demonstrating the performance of Keyd and they should <strong>not</strong> be used for
+        security-critical applications.
+        </p>
+
+        <h1>Go client</h1>
+
+        <p>
+        The binary of the Go client is available at XYZ. The code for the client is
+        available <a href="https://github.com/submission18/vpir/cmd/grpc/client/interactive">here</a> 
+        and can be installed from source using <code>go install</code>.
+        </p>
+
+        <details>
+            <summary>Presentation</summary>
+
+            <h1>Introduction</h1>
+
+            <p>
+            Keyd is a PGP public-key directory that offers
+            (1) classic key look-ups and
+            (2) computation of statistics over keys.
+            We implement Keyd in the two server model, where the security
+            properties hold as long as at least one server is honest.
+            </p>
+
+            <p>
+            Keyd servers a snapshot of SKS PGP key directory that we downloaded on 24
+            January 2021. We removed all the public keys larger than 8 KiB, because we
+            found that this was enough to include all keys that did not include large
+            attachments. We also removed all keys that had been revoked, keys with an
+            invalid format, and keys that had no email address in their metadata.
+            We also removed the subkeys of each public key, leaving only the primary key.
+            If a key included multiple emails, we indexed this key by using the primary
+            email. As a result, Keyd servers a total of 3,557,164 unique PGP keys.
+            </p>
+
+            <p>
+            We provide two ways to use Keyd by querying the two servers holding an exact
+            replica of the database.
+            </p>
+
+            <p>Website frontend</h1>
+
+            <p>
+            This website is a frontened for the Keyd client introduced above.
+            The queries issued through this website are sent in cleartext to a server, which
+            act as a Keyd client and issue the real verifiable-PIR queries to the servers.
+            The answers from the servers are sent to the server simulating the client, which
+            executes the reconstruction procedure and forward the result to be presented on
+            this website.
+            </p>
+
+            <h1>Contact</h1>
+
+            <p>
+            TODO: verify if this address work.
+            contact@keyd.org
+            </p>
+        </details>
+    </div>
+
+    <div class="main">
+        <div class="retrieve">
+            <h2>Fetch PGP key</h2>
+
+            <div class="content-wrap">
+                <p class="hint">Retrieve a PGP key by email</p>
+
+                <form method="POST" action="javascript:void(0);" onSubmit="retrieve()">
+                    <div class="row-form">
+                        <label for="retrieve-email-input">Email</label>
+                        <input placeholder="Enter email..." id="retrieve-email-input" type="text" name="email" />
+                    </div>
+
+                    <div class="std-btn">
+                        <button class="std-btn">Retrieve</button>
+                    </div>
+                </form>
+
+                <div id="retrieve-result">
+                </div>
+            </div>
+        </div>
+
+        <div class="count-emails">
+            <h2>Count emails</h2>
+        
+            <div class="content-wrap">
+                <p class="hint">Select the type of query</p>
+
+                <div class="row">
+                    <input class="openable" type="radio" id="count-email" name="query-type" value="email">
+                    <label for="count-email">By email</label>
+
+                    <form class="sub-form" action="javascript:void(0);" onSubmit="countByEmail(this)">
+                        <div class="row">
+                            <input type="radio" id="count-email-begin" name="email-position" value="begin">
+                            <label for="count-email-begin">Begins with...</label>
+                        </div>
+
+                        <div class="row">
+                            <input type="radio" id="count-email-end" name="email-position" value="end">
+                            <label for="count-email-end">Ends with...</label>
+                        </div>
+
+                        <div class="row-form">
+                            <label for="count-email-text">Text</label>
+                            <input type="text" id="count-email-text" required>
+                        </div>
+
+                        <div class="std-btn">
+                            <button class="std-btn">Submit query</button>
+                        </div>
+
+                        <div class="result" id="count-email-result">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row">
+                    <input class="openable" type="radio" id="count-algo" name="query-type" value="algo">
+                    <label for="count-algo">By algo</label>
+
+                    <form class="sub-form" action="javascript:void(0);" onSubmit="countByAlgo(this)">
+                        <div class="row">
+                            <input type="radio" id="count-algo-rsa" name="algo-type" value="RSA">
+                            <label for="count-algo-rsa">RSA</label>
+                        </div>
+
+                        <div class="row">
+                            <input type="radio" id="count-algo-ElGamal" name="algo-type" value="ElGamal">
+                            <label for="count-algo-ElGamal">ElGamal</label>
+                        </div>
+
+                        <div class="row">
+                            <input type="radio" id="count-algo-DSA" name="algo-type" value="DSA">
+                            <label for="count-algo-DSA">DSA</label>
+                        </div>
+
+                        <div class="row">
+                            <input type="radio" id="count-algo-ECDH" name="algo-type" value="ECDH">
+                            <label for="count-algo-ECDH">ECDH</label>
+                        </div>
+
+                        <div class="row">
+                            <input type="radio" id="count-algo-ECDSA" name="algo-type" value="ECDSA">
+                            <label for="count-algo-ECDSA">ECDSA</label>
+                        </div>
+
+                        <div class="std-btn">
+                            <button class="std-btn">Submit query</button>
+                        </div>
+
+                        <div class="result" id="count-algo-result">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row">
+                    <input class="openable" type="radio" id="count-timestamp" name="query-type" value="timestamp">
+                    <label for="count-timestamp">By timestamp</label>
+
+                    <form class="sub-form" action="javascript:void(0);" onSubmit="countByTimestamp(this)">
+                        <!--<div class="row-form">
+                            <label for="count-timestamp-month">Month (1-12)</label>
+                            <input type="number" id="count-timestamp-month" value="1" min="1" max="12" name="month">
+                        </div>-->
+
+                        <div class="row-form">
+                            <label for="count-timestamp-year">Year</label>
+                            <input type="number" id="count-timestamp-year" value="2010" min="1970" max="2021" name="year">
+                        </div>
+
+                        <div class="std-btn">
+                            <button class="std-btn">Submit query</button>
+                        </div>
+
+                        <div class="result" id="count-timestamp-result">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+    </div>
+
+    <style>
+    </style>
+    
+    <script>
+        function retrieve() {
+            const email = document.getElementById("retrieve-email-input").value
+            const result = document.getElementById("retrieve-result")
+
+            result.innerText = "retreiving..."
+
+            fetch("/retrieve", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `email=${email}`,
+            }).then(data => {
+                if (!data.ok) {
+                    return Promise.all([Promise.resolve(`error: ${data.status} ${data.statusText}`), data.text()]);
+                }
+
+                return data.text();
+            })
+            .then(res => {
+                result.innerHTML = `<div>${res}</div>`;;
+            })
+            .catch(error => {
+                result.innerText = "error: " + error;
+            });
+        }
+
+        function countByEmail(f) {
+            const text = document.getElementById("count-email-text").value
+            const emailPosition = f.elements.namedItem("email-position").value
+            const result = document.getElementById("count-email-result")
+            
+            result.innerHTML = svgSpinner
+
+            fetch("/count/email", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `position=${emailPosition}&text=${text}`,
+            }).then(data => {
+                if (!data.ok) {
+                    return Promise.all([Promise.resolve(`error: ${data.status} ${data.statusText}`), data.text()]);
+                }
+
+                return data.text();
+            })
+            .then(res => {
+                result.innerHTML = `<div>${res}</div>`;
+            })
+            .catch(error => {
+                result.innerText = "error: " + error;
+            });
+        }
+
+        function countByAlgo(f) {
+            const algoType = f.elements.namedItem("algo-type").value
+            const result = document.getElementById("count-algo-result")
+            
+            result.innerHTML = svgSpinner
+
+            fetch("/count/algo", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `algo=${algoType}`,
+            }).then(data => {
+                if (!data.ok) {
+                    return Promise.all([Promise.resolve(`error: ${data.status} ${data.statusText}`), data.text()]);
+                }
+
+                return data.text();
+            })
+            .then(res => {
+                result.innerHTML = `<div>${res}</div>`;
+            })
+            .catch(error => {
+                result.innerText = "error: " + error;
+            });
+        }
+
+        function countByTimestamp(f) {
+            //const day = 1
+            //const month = f.elements.namedItem("month").value
+            const year = f.elements.namedItem("year").value
+
+            const result = document.getElementById("count-timestamp-result")
+            
+            result.innerHTML = svgSpinner
+
+            fetch("/count/timestamp", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `year=${year}`,
+            }).then(data => {
+                if (!data.ok) {
+                    return Promise.all([Promise.resolve(`error: ${data.status} ${data.statusText}`), data.text()]);
+                }
+
+                return data.text();
+            })
+            .then(res => {
+                result.innerHTML = `<div>${res}</div>`;
+            })
+            .catch(error => {
+                result.innerText = "error: " + error;
+            });
+        }
+
+        let svgSpinner = `<div class="loader"><svg class="spinner" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="7"></circle>
+            </svg> loading</div>`
+    </script>
+
+  </body>
+</html>
